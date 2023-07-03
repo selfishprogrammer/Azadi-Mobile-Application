@@ -21,13 +21,13 @@ export default function Cards({item, disabled, product}) {
         width: 150,
         padding: 20,
         backgroundColor: '#fff',
-        borderRadius: 10,
-        shadowColor: Colors.modalShadowColor,
+        borderRadius: 2,
+        shadowColor: '#fff',
         shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.5,
-        elevation: 8,
+        elevation: 3,
         marginVertical: 10,
         marginHorizontal: 5,
+        borderWidth: 0.1,
       }}>
       <View
         style={{

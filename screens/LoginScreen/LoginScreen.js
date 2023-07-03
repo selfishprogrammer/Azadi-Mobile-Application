@@ -74,7 +74,7 @@ export default function LoginScreen() {
           paddingBottom: 10,
           shadowColor: Colors.toolTipColor,
           shadowOffset: {width: 0, height: 1},
-          shadowOpacity: 0.5,
+
           elevation: 8,
           paddingHorizontal: 25,
           backgroundColor: '#fff',

@@ -32,7 +32,7 @@ export default function Carts() {
         borderRadius: 12,
         shadowColor: Colors.modalShadowColor,
         shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.5,
+
         elevation: 8,
         // height: 60,
       }}>

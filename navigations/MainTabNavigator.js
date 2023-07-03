@@ -22,6 +22,7 @@ import CartDetailsScreen from '../screens/CartDetailsScreen/CartDetailsScreen';
 import ShopsScreen from '../screens/ShopsScreen/ShopsScreen';
 import {shopsIcon} from '../constants/images';
 import OTPScreen from '../screens/OTPScreen/OTPScreen';
+import ShopDetailsSceen from '../screens/ShopsScreen/ShopDetailsSceen';
 const Stack = createNativeStackNavigator();
 
 const HomeStack = () => {
@@ -233,6 +234,11 @@ const nonLoginStack = () => {
         name="OTPScreen"
         component={OTPScreen}
       />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="ShopDetailsSceen"
+        component={ShopDetailsSceen}
+      />
     </Stack.Navigator>
   );
 };
@@ -241,8 +247,6 @@ export default function MainTabNavigator() {
   const [checking, setchecking] = useState(true);
   const [userData, setuserData] = useState(null);
   const {isLogin} = useSelector(state => state.auth);
-  const {cartItem} = useSelector(state => state.product);
-
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -251,11 +255,10 @@ export default function MainTabNavigator() {
     if (isFocused) {
       getUserDetails();
     }
-  }, [isFocused, getUserDetails]);
+  }, [isFocused]);
 
   const getCartItem = async () => {
     const cart = await getCart();
-    console.log('cartttt', cart);
     if (cart === null) {
       dispatch(setCartItem([]));
     } else {
@@ -301,6 +304,11 @@ export default function MainTabNavigator() {
         options={{headerShown: false}}
         name="CartDetailsScreen"
         component={CartDetailsScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="ShopDetailsSceen"
+        component={ShopDetailsSceen}
       />
     </Stack.Navigator>
   );

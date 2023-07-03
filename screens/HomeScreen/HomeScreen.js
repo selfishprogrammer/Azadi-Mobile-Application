@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import {ScrollView, Text, View} from 'react-native';
+import {FlatList, ScrollView, Text, View} from 'react-native';
 import React from 'react';
 import Cards from '../../components/Cards';
 import {useState} from 'react';
@@ -20,22 +21,30 @@ import Carts from '../../components/Carts';
 import {useDispatch, useSelector} from 'react-redux';
 import getUserLocation from '../../services/LocationHelper';
 import {setallBusiness, setallProductList} from '../../Redux/productSlice';
+import {useIsFocused} from '@react-navigation/native';
 export default function HomeScreen() {
   const [allProduct, setallProduct] = useState([]);
   const [filterProduct, setfilterProduct] = useState([]);
   const [secondHandProduct, setsecondHandProduct] = useState([]);
   const {cartItem} = useSelector(state => state.product);
   const dispatch = useDispatch();
+  const isFoucused = useIsFocused();
+  useEffect(() => {
+    getUserLocation();
+  }, []);
 
   useEffect(() => {
     getAllProduct();
-    getUserLocation();
-  }, []);
+    if (isFoucused) {
+      getAllProduct();
+    }
+  }, [isFoucused]);
 
   const handleServices = () => {};
 
   const getAllProduct = async () => {
     const pro = await Service.getAllProduct();
+    console.log('fuck');
     if (pro && pro.success) {
       const proArray = pro.resultObj.filter(item => {
         return (
@@ -78,33 +87,23 @@ export default function HomeScreen() {
         setsecondHandProduct(allProduct);
       }
     }
-
-    // FILTER_LIST[backGColor].color = 'orange';
-    // setbackGClr(FILTER_LIST[backGColor].color);
   };
 
   const renderProduct = () => {
     if (filterProduct.length > 0) {
       return (
-        <ScrollView
-          nestedScrollEnabled={true}
+        <FlatList
           showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 10,
-            paddingBottom: 5,
-          }}>
-          {filterProduct.map((item, key) => (
+          horizontal
+          data={filterProduct}
+          renderItem={({item}) => (
             <Cards
-              item={item}
-              key={key}
               product={filterProduct}
+              item={item}
               disabled={item.inStock}
             />
-          ))}
-        </ScrollView>
+          )}
+        />
       );
     } else {
       return <NoProductFound />;
@@ -114,25 +113,18 @@ export default function HomeScreen() {
   const renderSecondHandProduct = () => {
     if (secondHandProduct.length > 0) {
       return (
-        <ScrollView
-          nestedScrollEnabled={true}
+        <FlatList
           showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 10,
-            paddingBottom: 5,
-          }}>
-          {secondHandProduct.map((item, key) => (
+          horizontal
+          data={secondHandProduct}
+          renderItem={({item}) => (
             <Cards
-              item={item}
-              key={key}
               product={secondHandProduct}
+              item={item}
               disabled={item.inStock}
             />
-          ))}
-        </ScrollView>
+          )}
+        />
       );
     } else {
       return <NoProductFound />;
@@ -159,26 +151,15 @@ export default function HomeScreen() {
   return (
     <>
       <Header />
-
       {renderCart()}
       <ScrollView style={{flex: 1, backgroundColor: '#fff'}}>
-        {/* <TouchableOpacity> */}
         <SearchBar screen="Home" />
-        {/* </TouchableOpacity> */}
-        <ScrollView
-          nestedScrollEnabled={true}
+        <FlatList
           showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 10,
-            alignItems: 'center',
-          }}>
-          {HOME_CARAOUSEL.map((item, key) => (
-            <HomeSlider url={item} key={key} />
-          ))}
-        </ScrollView>
+          horizontal
+          data={HOME_CARAOUSEL}
+          renderItem={({item}) => <HomeSlider url={item} />}
+        />
         <Text
           style={{
             fontFamily: Fonts.bold,
@@ -190,24 +171,19 @@ export default function HomeScreen() {
           }}>
           Product by categories
         </Text>
-        <ScrollView
-          nestedScrollEnabled={true}
+        <FlatList
           showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          {FILTER_LIST.map((item, key) => (
+          horizontal
+          data={FILTER_LIST}
+          renderItem={({item}) => (
             <Filter
-              key={key}
               title={item.title}
               category={item.category}
               images={item.images}
               onClickFilter={filterVal => handleFilter(filterVal, 'firstHand')}
             />
-          ))}
-        </ScrollView>
+          )}
+        />
 
         {renderProduct()}
         <Text
@@ -221,24 +197,20 @@ export default function HomeScreen() {
           }}>
           Services
         </Text>
-        <ScrollView
-          nestedScrollEnabled={true}
+
+        <FlatList
           showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          {SERVICES_LIST.map((item, key) => (
+          horizontal
+          data={SERVICES_LIST}
+          renderItem={({item, key}) => (
             <Filter
-              key={key}
               title={item.title}
               category={item.category}
               images={item.images}
               onClickFilter={filterVal => handleServices(filterVal, key)}
             />
-          ))}
-        </ScrollView>
+          )}
+        />
         {/* {renderProduct()} */}
         <Text
           style={{
@@ -251,24 +223,21 @@ export default function HomeScreen() {
           }}>
           Second Hand Products
         </Text>
-        <ScrollView
-          nestedScrollEnabled={true}
+        <FlatList
           showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          {FILTER_LIST.map((item, key) => (
+          horizontal
+          data={FILTER_LIST}
+          renderItem={({item, key}) => (
             <Filter
-              key={key}
               title={item.title}
               category={item.category}
               images={item.images}
-              onClickFilter={filterVal => handleFilter(filterVal, 'secondHand')}
+              onClickFilter={filterVal =>
+                handleServices(filterVal, 'secondHand')
+              }
             />
-          ))}
-        </ScrollView>
+          )}
+        />
         {renderSecondHandProduct()}
       </ScrollView>
     </>

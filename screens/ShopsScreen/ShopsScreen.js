@@ -1,48 +1,85 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import {View, Text, ScrollView} from 'react-native';
+import {View, ScrollView, FlatList, Text} from 'react-native';
 import React from 'react';
 import Header from '../../components/Header';
-import {useSelector} from 'react-redux';
-import Cards from '../../components/Cards';
+import {useDispatch, useSelector} from 'react-redux';
 import NoProductFound from '../../components/NoProductFound';
 import ShopsCard from '../../components/ShopsCard';
+import Service from '../../services/services';
+import {setallBusiness} from '../../Redux/productSlice';
+import {useEffect} from 'react';
 import Fonts from '../../constants/Fonts';
+import {FILTER_LIST} from '../../constants/constants';
+import Filter from '../../components/Filter';
+import Cards from '../../components/Cards';
+import {useState} from 'react';
 
 export default function ShopsScreen() {
-  const {allBusiness} = useSelector(state => state.product);
-  // console.log('allBusiness', Array.from(new Set(allBusiness)));
-  //   let arr = [allBusiness[0]];
-  //   allBusiness.forEach(element => {
-  //     console.log(arr.includes(element?._id));
-  //     arr.forEach(element2 => {
-  //       if (element2?._id !== element?._id) {
-  //         arr.push(element);
-  //       }
-  //     });
-  //   });
-  //   console.log('allBusiness2', [...new Set(arr)]);
+  const {allProductList, allBusiness} = useSelector(state => state.product);
+  const dispatch = useDispatch();
+  const [allBusinessState, setallBusinessState] = useState([]);
+  const [secondHandBussiness, setsecondHandBussiness] = useState([]);
+
+  useEffect(() => {
+    getShopsRecord();
+  }, [getShopsRecord]);
+
+  const getShopsRecord = async () => {
+    const shops = await Service.getAllBusiness();
+    console.log('shops===>>>', shops);
+    if (shops && shops?.success) {
+      let showBussiness = shops?.resultObj.filter(i => {
+        console.log('bussinessYpppp', i.businessType);
+        return i.isActive && i.isVerified;
+      });
+
+      setallBusinessState(showBussiness);
+      let secondHandBusiness = showBussiness.filter(i => {
+        console.log('bussinessYpppp', i.businessType);
+        return i.businessType === 'secondHand';
+      });
+      setsecondHandBussiness(secondHandBusiness);
+      dispatch(setallBusiness(allBusinessState));
+    } else {
+    }
+  };
+
   const renderShops = () => {
-    if (allBusiness.length > 0) {
+    if (allBusinessState.length > 0) {
       return (
-        <ScrollView
-          nestedScrollEnabled={true}
+        <FlatList
           showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 10,
-            paddingBottom: 5,
-          }}>
-          {allBusiness.map((item, key) => (
+          horizontal
+          data={allBusinessState}
+          renderItem={({item}) => (
             <ShopsCard
+              product={allBusinessState}
               item={item}
-              key={key}
-              product={allBusiness}
               disabled={item.inStock}
             />
-          ))}
-        </ScrollView>
+          )}
+        />
+      );
+    } else {
+      return <NoProductFound />;
+    }
+  };
+  const renderSecondHandShops = () => {
+    if (secondHandBussiness.length > 0) {
+      return (
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={secondHandBussiness}
+          renderItem={({item}) => (
+            <ShopsCard
+              product={secondHandBussiness}
+              item={item}
+              disabled={item.inStock}
+            />
+          )}
+        />
       );
     } else {
       return <NoProductFound />;
@@ -52,22 +89,89 @@ export default function ShopsScreen() {
     <View
       style={{
         flex: 1,
-        backgroundColor: '#fff',
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#F5F5F5',
       }}>
       <Header />
+
       <ScrollView
         contentContainerStyle={{
-          flex: 1,
-          backgroundColor: '#fff',
-          justifyContent: 'center',
-          alignItems: 'center',
+          marginHorizontal: 10,
+          marginVertical: 5,
         }}>
-        <Text style={{color: 'black', fontFamily: Fonts.bold, fontSize: 20}}>
-          We are Coming Soon!
+        <Text
+          style={{
+            fontFamily: Fonts.bold,
+            color: 'black',
+            fontSize: 12,
+            textAlign: 'left',
+            marginHorizontal: 13,
+            marginTop: 10,
+          }}>
+          Shops/Business by categories
+        </Text>
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={FILTER_LIST}
+          renderItem={({item}) => (
+            <Filter
+              title={item.title}
+              category={item.category}
+              images={item.images}
+              // onClickFilter={filterVal => handleFilter(filterVal, 'firstHand')}
+            />
+          )}
+        />
+        {renderShops()}
+        <Text
+          style={{
+            fontFamily: Fonts.bold,
+            color: 'black',
+            fontSize: 12,
+            textAlign: 'left',
+            marginHorizontal: 13,
+            marginTop: 10,
+          }}>
+          Second hand Shops/Business
+        </Text>
+        {renderSecondHandShops()}
+        <Text
+          style={{
+            fontFamily: Fonts.bold,
+            color: 'black',
+            fontSize: 12,
+            textAlign: 'left',
+            marginHorizontal: 13,
+            marginTop: 10,
+          }}>
+          Shops/Business by your currnt location
         </Text>
         {/* {renderShops()} */}
+        {renderShops()}
+        {console.log('allBusiness.length', allBusiness.length)}
+        <Text
+          style={{
+            fontFamily: Fonts.bold,
+            color: 'black',
+            fontSize: 12,
+            textAlign: 'left',
+            marginHorizontal: 13,
+            marginTop: 10,
+          }}>
+          Product releated to shops
+        </Text>
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={allProductList}
+          renderItem={({item}) => (
+            <Cards
+              product={allProductList}
+              item={item}
+              disabled={item.inStock}
+            />
+          )}
+        />
       </ScrollView>
     </View>
   );

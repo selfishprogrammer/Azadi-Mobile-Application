@@ -17,7 +17,7 @@ const SearchBar = ({screen, onChangeCallback}) => {
         justifyContent: 'space-between',
         alignItems: 'center',
       }}>
-      <View style={{width: '90%'}}>
+      <View style={{width: '90%', elevation: 8}}>
         <TextInput
           onPressIn={() =>
             screen === 'Home' ? navigation.navigate('SearchProductScreen') : ''
@@ -26,7 +26,7 @@ const SearchBar = ({screen, onChangeCallback}) => {
           style={{
             borderWidth: 2,
             borderColor: 'white',
-            height: 40,
+            height: 45,
             backgroundColor: '#fff',
             color: 'black',
             fontFamily: Fonts.bold,

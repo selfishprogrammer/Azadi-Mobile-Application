@@ -101,7 +101,7 @@ export default function ContactScreen() {
             borderRadius: 3,
             shadowColor: Colors.modalShadowColor,
             shadowOffset: {width: 0, height: 1},
-            shadowOpacity: 0.5,
+
             elevation: 4,
             marginTop: 10,
             marginHorizontal: 10,
