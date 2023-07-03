@@ -4,26 +4,26 @@ import React from 'react';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
 import {Rating} from 'react-native-ratings';
+import {useNavigation} from '@react-navigation/native';
 
-export default function ShopsCard({item}) {
+export default function ShopsCard({item, product}) {
+  const navigation = useNavigation();
   return (
     <TouchableOpacity
-      //   disabled={!disabled}
-      //   onPress={() =>
-      //     navigation.navigate('ProductDetailsScreen', {
-      //       item,
-      //       product,
-      //     })
-      //   }
+      disabled={item.instock}
+      onPress={() =>
+        navigation.navigate('ShopDetailsSceen', {
+          item,
+          product,
+        })
+      }
       style={{
-        width: 170,
-        padding: 20,
+        width: 150,
+        padding: 10,
         backgroundColor: '#fff',
         borderRadius: 10,
         shadowColor: Colors.modalShadowColor,
         shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.5,
-        elevation: 8,
         marginVertical: 10,
         marginHorizontal: 5,
       }}>
@@ -37,7 +37,7 @@ export default function ShopsCard({item}) {
           source={{
             uri: `https://d33fx86ztratj.cloudfront.net/${item?.logo}`,
           }}
-          style={{width: 80, height: 80, resizeMode: 'contain'}}
+          style={{width: '100%', height: 80, resizeMode: 'contain'}}
         />
       </View>
       <Text

@@ -20,7 +20,6 @@ export default function PaymentModal({toPay}) {
         borderTopRightRadius: 10,
         shadowColor: Colors.modalShadowColor,
         shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.5,
       }}>
       <View
         style={{

@@ -22,18 +22,19 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setCartItem} from '../../Redux/productSlice';
 import Carts from '../../components/Carts';
 import {setCart} from '../../services/auth';
+import {useNavigation} from '@react-navigation/native';
 export default function ProductDetailsScreen(props) {
   const {item, product} = props.route.params;
   console.log('productID2', product);
   // const [product, setproduct] = useState({});
   const [showProductData, setshowProductData] = useState(true);
   // const [cartsItem, setcartsItem] = useState([])
-  const {cartItem} = useSelector(state => state.product);
+  const {cartItem, allBusiness} = useSelector(state => state.product);
   const dispatch = useDispatch();
   const descHtml = {
     html: item?.description,
   };
-
+  const navigation = useNavigation();
   const {width} = useWindowDimensions();
 
   const addToCart = async () => {
@@ -176,6 +177,33 @@ export default function ProductDetailsScreen(props) {
       );
     }
   };
+  console.log('allBusiness.length', allBusiness.length);
+  const handleBusiness = () => {
+    // const business = [];
+    // console.log('item.business.category', item.business.category);
+    // product.map((i, k) => {
+    //   console.log('i.business.category', i.business.category);
+    //   console.log('i.business?._id', i.business?._id);
+
+    //   if (
+    //     i.category === item.business.category &&
+    //     i.business?._id !== item.business?._id
+    //   ) {
+    //     business.map((i2, k2) => {
+    //       console.log('i2.business._id', i2.business._id);
+
+    //       if (i2?._id !== i.business._id || business.length <= 0) {
+    //         business.push(i.business);
+    //       }
+    //     });
+    //   }
+    // });
+
+    navigation.navigate('ShopDetailsSceen', {
+      item: item.business,
+      product: allBusiness,
+    });
+  };
   const renderCart = () => {
     if (cartItem?.length > 0) {
       return (
@@ -210,16 +238,35 @@ export default function ProductDetailsScreen(props) {
             {item?.name}
           </Text>
           {renderPriceAndAddToCart()}
-          <Text
-            numberOfLines={1}
+          <View
             style={{
-              fontFamily: Fonts.bold,
-              color: 'black',
-              fontSize: 14,
-              textAlign: 'center',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
             }}>
-            Delivering to you in 15 mins
-          </Text>
+            <Text
+              numberOfLines={1}
+              style={{
+                fontFamily: Fonts.bold,
+                color: 'black',
+                fontSize: 14,
+                textAlign: 'center',
+              }}>
+              Delivering to you in 15 mins
+            </Text>
+            <TouchableOpacity onPress={() => handleBusiness()}>
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontFamily: Fonts.bold,
+                  fontSize: 14,
+                  textAlign: 'center',
+                  color: 'green',
+                }}>
+                Go to {item?.business?.name}
+              </Text>
+            </TouchableOpacity>
+          </View>
           <View
             style={{
               padding: 10,
@@ -228,7 +275,7 @@ export default function ProductDetailsScreen(props) {
               borderRadius: 10,
               shadowColor: Colors.modalShadowColor,
               shadowOffset: {width: 0, height: 1},
-              shadowOpacity: 0.5,
+
               elevation: 4,
               marginTop: 20,
               marginHorizontal: 0,

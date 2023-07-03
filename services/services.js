@@ -34,4 +34,6 @@ export default class Service {
   static submitContactUs = data => {
     return postReq('CONTACTUS', data);
   };
+
+  static getAllBusiness = () => getReq2('GETBUSINESSES');
 }

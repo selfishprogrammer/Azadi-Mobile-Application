@@ -40,7 +40,7 @@ export default function SearchProduct() {
               borderRadius: 3,
               shadowColor: Colors.modalShadowColor,
               shadowOffset: {width: 0, height: 1},
-              shadowOpacity: 0.5,
+
               elevation: 4,
             }}>
             {searchArrat.map((i, k) => (

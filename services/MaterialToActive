@@ -1,0 +1,2 @@
+update eztrackerv2."PartnerIDMaster" set status  ='ACTIVE' where
+"materialNumber" IN ('23274304','23274596','23274594','23034607','23205611');
