@@ -19,6 +19,8 @@ target 'Azadi' do
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
 
+  pod 'RNExitApp', :path => '../node_modules/react-native-exit-app'
+
   target 'AzadiTests' do
     inherit! :complete
     # Pods for testing

@@ -6,12 +6,12 @@ import Colors from '../../constants/Colors';
 import Fonts from '../../constants/Fonts';
 import {useNavigation} from '@react-navigation/native';
 import Service from '../../services/services';
-import {setLogin, setUserData} from '../../Redux/authSlice';
 import {useDispatch} from 'react-redux';
-import {setLoggedIn, setUser} from '../../services/auth';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setLoading} from '../../Redux/loaderSlice';
 import ErrorToast from '../../components/ErrorToast';
+import TermsAndConditions from '../../components/TermsAndConditions';
+import ErrorText from '../../components/ErrorText';
 
 export default function RegisterScreen() {
   const navigation = useNavigation();
@@ -26,6 +26,8 @@ export default function RegisterScreen() {
   const [cpassword, setcpassword] = useState('');
   const [cpasswordHasError, setcpasswordHasError] = useState('');
   const [backendResponce, setbackendResponce] = useState('');
+  const [tcVal, settcVal] = useState(false);
+  const [tcValError, settcValError] = useState('');
   const dispatch = useDispatch();
   const register = async () => {
     resetErrorField();
@@ -61,6 +63,8 @@ export default function RegisterScreen() {
         );
       } else if (password !== cpassword) {
         setcpasswordHasError("Password doesn't match, please try again");
+      } else if (!tcVal) {
+        settcValError('Please Accept Terms & Conditions');
       } else {
         dispatch(setLoading(true));
         const registerData = await Service.userRegister({
@@ -175,6 +179,8 @@ export default function RegisterScreen() {
             onHandelchage={e => setcpassword(e)}
             value={cpassword}
           />
+          <TermsAndConditions tcAccepted={e => settcVal(e)} />
+          <ErrorText errorMsg={tcValError} />
           <TouchableOpacity
             onPress={register}
             style={{

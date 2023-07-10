@@ -1,5 +1,6 @@
 // import Colors from '../constants/Colors';
 
+import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
 
 const React = require('react-native');
@@ -137,5 +138,33 @@ export default {
     fontSize: 20,
     color: 'blue',
     // fontWeight: '700',
+  },
+  networkModalContent: {
+    backgroundColor: '#fff',
+    width: '85%',
+    borderRadius: 8,
+    padding: 25,
+  },
+  networkErrorText: {
+    fontSize: 16,
+    fontFamily: Fonts.regular,
+    color: Colors.primaryDarkGreen,
+  },
+  tryAgainBtn: {
+    alignSelf: 'flex-end',
+    marginTop: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  tryAgainTxt: {
+    color: Colors.primaryDarkGreen,
+    fontFamily: Fonts.bold,
+    fontSize: 18,
+    marginRight: 15,
   },
 };
