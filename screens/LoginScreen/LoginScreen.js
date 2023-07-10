@@ -11,6 +11,8 @@ import {setLogin, setUserData} from '../../Redux/authSlice';
 import {setLoggedIn, setUser} from '../../services/auth';
 import {setLoading} from '../../Redux/loaderSlice';
 import ErrorToast from '../../components/ErrorToast';
+import TermsAndConditions from '../../components/TermsAndConditions';
+import ErrorText from '../../components/ErrorText';
 
 export default function LoginScreen() {
   const [username, setusername] = useState('');
@@ -19,6 +21,8 @@ export default function LoginScreen() {
   const [passwordHasError, setpasswordHasError] = useState('');
   const [backendResponce, setbackendResponce] = useState('');
   const {isLoading} = useSelector(state => state.loading);
+  const [tcVal, settcVal] = useState(false);
+  const [tcValError, settcValError] = useState('');
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -43,6 +47,9 @@ export default function LoginScreen() {
     }
     if (password.length <= 0) {
       setpasswordHasError('Enter a password');
+    }
+    if (!tcVal) {
+      settcValError('Please Accept Terms & Conditions');
     } else {
       dispatch(setLoading(true));
       const loginData = await Service.userLogin({
@@ -62,6 +69,7 @@ export default function LoginScreen() {
       dispatch(setLoading(false));
     }
   };
+
   return (
     <View
       style={{flex: 1, backgroundColor: '#F5F5F5', justifyContent: 'center'}}>
@@ -117,6 +125,8 @@ export default function LoginScreen() {
             Forgot Password?
           </Text>
         </TouchableOpacity>
+        <TermsAndConditions tcAccepted={e => settcVal(e)} />
+        <ErrorText errorMsg={tcValError} />
         <TouchableOpacity
           onPress={login}
           style={{

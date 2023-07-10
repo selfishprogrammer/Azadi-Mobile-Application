@@ -28,4 +28,23 @@ const getCart = async () => {
   }
   return JSON.parse(data);
 };
-export {setUser, getUser, setLoggedIn, getLoggedIn, setCart, getCart};
+const setTCVersion = async data => {
+  await AsyncStorage.setItem('tc', JSON.stringify(data));
+};
+const getTCVersion = async () => {
+  const data = await AsyncStorage.getItem('tc');
+  if (!data) {
+    return null;
+  }
+  return data;
+};
+export {
+  setUser,
+  getUser,
+  setLoggedIn,
+  getLoggedIn,
+  setCart,
+  getCart,
+  setTCVersion,
+  getTCVersion,
+};
