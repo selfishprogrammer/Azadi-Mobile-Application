@@ -110,13 +110,13 @@ export default function RegisterScreen() {
     setcpasswordHasError('');
   };
   return (
-    <KeyboardAwareScrollView>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#F5F5F5',
-          justifyContent: 'center',
-        }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: 'green',
+        justifyContent: 'center',
+      }}>
+      <KeyboardAwareScrollView>
         <ErrorToast errorTxt={backendResponce} />
         <View
           style={{
@@ -224,7 +224,7 @@ export default function RegisterScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }

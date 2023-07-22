@@ -10,6 +10,8 @@ import {useEffect} from 'react';
 import {useIsFocused} from '@react-navigation/native';
 import {useState} from 'react';
 import styles from './styles';
+import FastImage from 'react-native-fast-image';
+import {refer} from '../constants/images';
 
 export default function LoggedInProfile() {
   const isFocused = useIsFocused();
@@ -17,6 +19,7 @@ export default function LoggedInProfile() {
   const [email, setemail] = useState('');
   const [phone, setphone] = useState('');
   const dispatch = useDispatch();
+  const {wishList} = useSelector(state => state.product);
 
   const logout = async () => {
     dispatch(setLogin(false));
@@ -58,7 +61,7 @@ export default function LoggedInProfile() {
                 alignItems: 'center',
                 justifyContent: 'flex-start',
               }}>
-              <Image
+              <FastImage
                 source={{
                   uri: 'https://icon-library.com/images/user-profile-icon/user-profile-icon-15.jpg',
                 }}
@@ -88,7 +91,7 @@ export default function LoggedInProfile() {
               </View>
             </View>
             <TouchableOpacity onPress={logout}>
-              <Image
+              <FastImage
                 source={{
                   uri: 'https://icons.veryicon.com/png/o/object/material-design-icons-1/pencil-circle.png',
                 }}
@@ -112,7 +115,7 @@ export default function LoggedInProfile() {
                   color: 'white',
                   textAlign: 'center',
                 }}>
-                FAVOURITE
+                ORDERS
               </Text>
               <Text
                 style={{
@@ -141,7 +144,7 @@ export default function LoggedInProfile() {
                   color: 'white',
                   textAlign: 'center',
                 }}>
-                0
+                {wishList.length}
               </Text>
             </View>
             <View>
@@ -175,7 +178,7 @@ export default function LoggedInProfile() {
           //   });
         >
           <Text style={styles.btnTxt2}>Change Password</Text>
-          <Image
+          <FastImage
             style={{height: 22, width: 22}}
             source={{
               uri: 'https://icon-library.com/images/pencil-icon/pencil-icon-24.jpg',
@@ -189,7 +192,7 @@ export default function LoggedInProfile() {
             // setsuccessModal(true);
           }}>
           <Text style={styles.btnTxt2}>Edit Account</Text>
-          <Image
+          <FastImage
             style={{height: 22, width: 22}}
             source={{
               uri: 'https://icons.veryicon.com/png/o/construction-tools/coca-design/delete-189.png',
@@ -199,7 +202,7 @@ export default function LoggedInProfile() {
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.btnTxt2}>Your Orders</Text>
-          <Image
+          <FastImage
             style={{height: 22, width: 22}}
             source={{
               uri: 'https://www.pinpng.com/pngs/m/51-512369_png-file-svg-medical-records-icon-free-transparent.png',
@@ -209,17 +212,12 @@ export default function LoggedInProfile() {
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.btnTxt2}>Refer & Earn</Text>
-          <Image
-            style={{height: 22, width: 22}}
-            source={{
-              uri: 'https://www.pinpng.com/pngs/m/51-512369_png-file-svg-medical-records-icon-free-transparent.png',
-            }}
-          />
+          <FastImage style={{height: 22, width: 22}} source={refer} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button} onPress={logout}>
           <Text style={styles.btnTxt2}>Logout</Text>
-          <Image
+          <FastImage
             style={{height: 22, width: 22}}
             source={{
               uri: 'http://cdn.onlinewebfonts.com/svg/img_508769.png',

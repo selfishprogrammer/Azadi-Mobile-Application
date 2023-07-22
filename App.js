@@ -47,7 +47,6 @@ export default function App() {
     dispatch(setAppVersion(VersionCheck.getCurrentVersion()));
   }, [dispatch]);
 
-  const statusText = isConnected ? 'Online' : 'Offline';
   const checkSafeAreaView = () => {
     if (Platform.OS === 'ios') {
       return (

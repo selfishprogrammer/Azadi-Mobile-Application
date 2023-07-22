@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import {FlatList, ScrollView, Text, View} from 'react-native';
+import {FlatList, RefreshControl, ScrollView, Text, View} from 'react-native';
 import React from 'react';
 import Cards from '../../components/Cards';
 import {useState} from 'react';
@@ -27,6 +27,7 @@ export default function HomeScreen() {
   const [allProduct, setallProduct] = useState([]);
   const [filterProduct, setfilterProduct] = useState([]);
   const [secondHandProduct, setsecondHandProduct] = useState([]);
+  const [refreshing, setrefreshing] = useState(false);
   const {cartItem} = useSelector(state => state.product);
   const dispatch = useDispatch();
   const isFoucused = useIsFocused();
@@ -58,19 +59,18 @@ export default function HomeScreen() {
         );
       });
       const allBusiness = [];
-      pro.resultObj.forEach(i => allBusiness.push(i.business));
+      // pro.resultObj.forEach(i => allBusiness.push(i.business));
       setallProduct(proArray);
       dispatch(setallProductList(proArray));
       setfilterProduct(proArray);
       setsecondHandProduct(secondHand);
-      dispatch(setallBusiness(allBusiness));
     }
   };
   const handleFilter = (filterValue, type) => {
     if (type === 'firstHand') {
       if (filterValue !== '') {
         const newProduct = allProduct.filter(item => {
-          return item.category === 'Others';
+          return item.category === filterValue;
         });
         setfilterProduct(newProduct);
       } else {
@@ -80,7 +80,7 @@ export default function HomeScreen() {
       if (filterValue !== '') {
         const newProduct = secondHandProduct.filter(item => {
           return (
-            item.category === 'Others' && item?.productType === 'secondHand'
+            item.category === filterValue && item?.productType === 'secondHand'
           );
         });
         setsecondHandProduct(newProduct);
@@ -94,11 +94,13 @@ export default function HomeScreen() {
     if (filterProduct.length > 0) {
       return (
         <FlatList
+          keyExtractor={(i, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={filterProduct}
           renderItem={({item}) => (
             <Cards
+              keyExtractor={(item, index) => index.toString()}
               product={filterProduct}
               item={item}
               disabled={item.inStock}
@@ -115,11 +117,13 @@ export default function HomeScreen() {
     if (secondHandProduct.length > 0) {
       return (
         <FlatList
+          keyExtractor={(i, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={secondHandProduct}
           renderItem={({item}) => (
             <Cards
+              keyExtractor={(item, index) => index.toString()}
               product={secondHandProduct}
               item={item}
               disabled={item.inStock}
@@ -149,18 +153,34 @@ export default function HomeScreen() {
       );
     }
   };
+  const onRefresh = () => {
+    setrefreshing(true);
+    getAllProduct();
+    setrefreshing(false);
+  };
   return (
     <>
       <Header />
       {renderCart()}
-      <ScrollView style={{flex: 1, backgroundColor: '#fff'}}>
+      <ScrollView
+        style={{flex: 1, backgroundColor: '#fff'}}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <SearchBar screen="Home" />
         <FlatList
+          keyExtractor={(i, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={HOME_CARAOUSEL}
-          renderItem={({item}) => <HomeSlider url={item} />}
+          renderItem={({item}) => (
+            <HomeSlider
+              url={item}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          )}
         />
+
         <Text
           style={{
             fontFamily: Fonts.bold,
@@ -173,11 +193,13 @@ export default function HomeScreen() {
           Product by categories
         </Text>
         <FlatList
+          keyExtractor={(i, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={FILTER_LIST}
           renderItem={({item}) => (
             <Filter
+              keyExtractor={(item, index) => index.toString()}
               title={item.title}
               category={item.category}
               images={item.images}
@@ -200,15 +222,17 @@ export default function HomeScreen() {
         </Text>
 
         <FlatList
+          keyExtractor={(i, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={SERVICES_LIST}
-          renderItem={({item, key}) => (
+          renderItem={({item}) => (
             <Filter
+              keyExtractor={(item, index) => index.toString()}
               title={item.title}
               category={item.category}
               images={item.images}
-              onClickFilter={filterVal => handleServices(filterVal, key)}
+              onClickFilter={filterVal => handleServices(filterVal)}
             />
           )}
         />
@@ -225,10 +249,11 @@ export default function HomeScreen() {
           Second Hand Products
         </Text>
         <FlatList
+          keyExtractor={(i, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={FILTER_LIST}
-          renderItem={({item, key}) => (
+          renderItem={({item}) => (
             <Filter
               title={item.title}
               category={item.category}

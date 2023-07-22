@@ -47,6 +47,7 @@ export default function ShopDetailsSceen(props) {
     if (relelatedBussiness.length > 0) {
       return (
         <FlatList
+          keyExtractor={(i, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={relelatedBussiness}
@@ -66,6 +67,7 @@ export default function ShopDetailsSceen(props) {
     if (productReleatedToParticularBusiness.length > 0) {
       return (
         <FlatList
+          keyExtractor={(i, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={productReleatedToParticularBusiness}

@@ -26,10 +26,10 @@ export default function NetworkModal() {
       //   props.setShowOtherModal(true);
       //   console.log('reloadScreen=>>>>', reloadScreen);
       //   if (reloadScreen) {
-      refScreen.refresh();
+      //   refScreen.refresh();
       //     props.getTranslation();
       //   }
-      window.location.reload();
+      //   window.location.reload();
     } else {
       setTimeout(() => {
         setnetworkModal(true);

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import {Text, Image} from 'react-native';
+import {Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
@@ -10,19 +10,25 @@ import ContactScreen from '../screens/ContactScreen/ContactScreen';
 import SearchProduct from '../screens/SearchProduct/SearchProduct';
 import LoginScreen from '../screens/LoginScreen/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen/RegisterScreen';
-import {getCart, getLoggedIn, getUser} from '../services/auth';
+import {getCart, getLoggedIn, getUser, getWishList} from '../services/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {setLogin} from '../Redux/authSlice';
 import SplashScreen from '../components/SplashScreen';
 import {useIsFocused} from '@react-navigation/native';
 import Fonts from '../constants/Fonts';
 import ProductDetailsScreen from '../screens/ProductDetailsScreen/ProductDetailsScreen';
-import {setCartItem} from '../Redux/productSlice';
+import {setCartItem, setWishList} from '../Redux/productSlice';
 import CartDetailsScreen from '../screens/CartDetailsScreen/CartDetailsScreen';
 import ShopsScreen from '../screens/ShopsScreen/ShopsScreen';
-import {shopsIcon} from '../constants/images';
+import {home, message, profile, shopsIcon} from '../constants/images';
 import OTPScreen from '../screens/OTPScreen/OTPScreen';
 import ShopDetailsSceen from '../screens/ShopsScreen/ShopDetailsSceen';
+import FastImage from 'react-native-fast-image';
+import CheckEmail from '../screens/ForgotPassord.js/CheckEmail';
+import ResetPassword from '../screens/ForgotPassord.js/ResetPassword';
+import CheckOutScreen from '../screens/CheckOutScreen/CheckOutScreen';
+import PaymentGateWay from '../components/PaymentGateWay';
+
 const Stack = createNativeStackNavigator();
 
 const HomeStack = () => {
@@ -132,12 +138,7 @@ const MyTabs = () => {
         options={{
           tabBarLabel: <Text style={{fontFamily: Fonts.bold}}>Home</Text>,
           tabBarIcon: ({color}) => (
-            <Image
-              style={{height: 22, width: 22}}
-              source={{
-                uri: 'https://cdn-icons-png.flaticon.com/512/25/25694.png',
-              }}
-            />
+            <FastImage style={{height: 22, width: 22}} source={home} />
           ),
         }}
       />
@@ -149,7 +150,7 @@ const MyTabs = () => {
           headerShown: true,
           tabBarLabel: <Text style={{fontFamily: Fonts.bold}}>Search</Text>,
           tabBarIcon: ({color}) => (
-            <Image
+            <FastImage
               style={{height: 22, width: 22}}
               source={{
                 uri: 'https://www.citypng.com/public/uploads/small/11640084021s7j4kii6hsgshmcxlovq7siag8vktv9rhqscjbbuyse2favmnjhrpjhrgqcug2nqdcpxsmovtjjonzon74knmk3kywi3tpxrpg8r.png',
@@ -159,28 +160,23 @@ const MyTabs = () => {
         }}
       /> */}
       <Bottom.Screen
-        name="shops"
+        name="Shop"
         component={ShopsStack}
         options={{
           tabBarLabel: <Text style={{fontFamily: Fonts.bold}}>Shops</Text>,
           tabBarIcon: ({color}) => (
-            <Image style={{height: 22, width: 22}} source={shopsIcon} />
+            <FastImage style={{height: 22, width: 22}} source={shopsIcon} />
           ),
         }}
       />
 
       <Bottom.Screen
-        name="contact"
+        name="Contact"
         component={ContactStack}
         options={{
           tabBarLabel: <Text style={{fontFamily: Fonts.bold}}>Contact Us</Text>,
           tabBarIcon: ({color}) => (
-            <Image
-              style={{height: 22, width: 22}}
-              source={{
-                uri: 'https://pixlok.com/wp-content/uploads/2021/07/Message-Free-Icon-fidswo.png',
-              }}
-            />
+            <FastImage style={{height: 22, width: 22}} source={message} />
           ),
         }}
       />
@@ -190,12 +186,7 @@ const MyTabs = () => {
         options={{
           tabBarLabel: <Text style={{fontFamily: Fonts.bold}}>Profile</Text>,
           tabBarIcon: ({color}) => (
-            <Image
-              style={{height: 22, width: 22}}
-              source={{
-                uri: 'https://icon-library.com/images/profile-png-icon/profile-png-icon-2.jpg',
-              }}
-            />
+            <FastImage style={{height: 22, width: 22}} source={profile} />
           ),
         }}
       />
@@ -239,6 +230,26 @@ const nonLoginStack = () => {
         name="ShopDetailsSceen"
         component={ShopDetailsSceen}
       />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="CheckEmail"
+        component={CheckEmail}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="ResetPassword"
+        component={ResetPassword}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="CheckOutScreen"
+        component={CheckOutScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="PaymentGateWay"
+        component={PaymentGateWay}
+      />
     </Stack.Navigator>
   );
 };
@@ -263,6 +274,14 @@ export default function MainTabNavigator() {
       dispatch(setCartItem([]));
     } else {
       dispatch(setCartItem([...cart]));
+    }
+
+    const wishList = await getWishList();
+    console.log(wishList, '=====');
+    if (wishList === null) {
+      dispatch(setWishList([]));
+    } else {
+      dispatch(setWishList(wishList));
     }
   };
 
@@ -309,6 +328,16 @@ export default function MainTabNavigator() {
         options={{headerShown: false}}
         name="ShopDetailsSceen"
         component={ShopDetailsSceen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="CheckOutScreen"
+        component={CheckOutScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="PaymentGateWay"
+        component={PaymentGateWay}
       />
     </Stack.Navigator>
   );

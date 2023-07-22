@@ -28,6 +28,17 @@ const getCart = async () => {
   }
   return JSON.parse(data);
 };
+
+const setWishLists = async data => {
+  await AsyncStorage.setItem('wishlist', JSON.stringify(data));
+};
+const getWishList = async () => {
+  const data = await AsyncStorage.getItem('wishlist');
+  if (!data) {
+    return [];
+  }
+  return JSON.parse(data);
+};
 const setTCVersion = async data => {
   await AsyncStorage.setItem('tc', JSON.stringify(data));
 };
@@ -47,4 +58,6 @@ export {
   getCart,
   setTCVersion,
   getTCVersion,
+  setWishLists,
+  getWishList,
 };

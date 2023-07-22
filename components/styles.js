@@ -45,7 +45,6 @@ export default {
     backgroundColor: '#fff',
     borderRadius: 15,
     padding: 10,
-    elevation: 5,
     marginVertical: 10,
     justifyContent: 'space-between',
     flexDirection: 'row',
