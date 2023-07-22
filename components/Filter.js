@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
-import {Text, TouchableOpacity, Image, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import Fonts from '../constants/Fonts';
+import FastImage from 'react-native-fast-image';
 
 export default function Filter({title, category, images, onClickFilter}) {
   return (
@@ -12,9 +13,13 @@ export default function Filter({title, category, images, onClickFilter}) {
         marginVertical: 15,
       }}>
       <View style={{marginHorizontal: 15}}>
-        <Image
+        <FastImage
           source={images}
-          style={{width: 80, height: 60, resizeMode: 'contain'}}
+          style={{
+            width: 60,
+            height: 60,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
         />
         <Text
           style={{

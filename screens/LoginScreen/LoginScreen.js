@@ -63,6 +63,7 @@ export default function LoginScreen() {
         await setLoggedIn('true');
         setbackendResponce('');
         resetInputField();
+        navigation.navigate('HomeScreen');
       } else {
         setbackendResponce('Email or password incorrect...');
       }
@@ -71,8 +72,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <View
-      style={{flex: 1, backgroundColor: '#F5F5F5', justifyContent: 'center'}}>
+    <View style={{flex: 1, backgroundColor: 'green', justifyContent: 'center'}}>
       <ErrorToast errorTxt={backendResponce} />
       <View
         style={{
@@ -113,7 +113,7 @@ export default function LoginScreen() {
           onHandelchage={e => setpassword(e)}
           value={password}
         />
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate('CheckEmail')}>
           <Text
             style={{
               textAlign: 'right',

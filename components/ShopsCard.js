@@ -1,10 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
 import {Rating} from 'react-native-ratings';
 import {useNavigation} from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 
 export default function ShopsCard({item, product}) {
   const navigation = useNavigation();
@@ -21,9 +22,11 @@ export default function ShopsCard({item, product}) {
         width: 150,
         padding: 10,
         backgroundColor: '#fff',
-        borderRadius: 10,
-        shadowColor: Colors.modalShadowColor,
+        borderRadius: 8,
+        shadowColor: Colors.tabIconNotSelected,
         shadowOffset: {width: 0, height: 1},
+
+        elevation: 8,
         marginVertical: 10,
         marginHorizontal: 5,
       }}>
@@ -33,7 +36,7 @@ export default function ShopsCard({item, product}) {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Image
+        <FastImage
           source={{
             uri: `https://d33fx86ztratj.cloudfront.net/${item?.logo}`,
           }}

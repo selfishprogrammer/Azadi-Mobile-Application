@@ -1,11 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
 import {Rating} from 'react-native-ratings';
 import {useNavigation} from '@react-navigation/native';
-
+import FastImage from 'react-native-fast-image';
 export default function Cards({item, disabled, product}) {
   const navigation = useNavigation();
   return (
@@ -21,13 +21,15 @@ export default function Cards({item, disabled, product}) {
         width: 150,
         padding: 20,
         backgroundColor: '#fff',
-        borderRadius: 2,
-        shadowColor: '#fff',
+        borderRadius: 8,
+        shadowColor: Colors.tabIconNotSelected,
         shadowOffset: {width: 0, height: 1},
-        elevation: 3,
+
+        elevation: 8,
+        paddingHorizontal: 25,
         marginVertical: 10,
         marginHorizontal: 5,
-        borderWidth: 0.1,
+        // borderWidth: 0.1,
       }}>
       <View
         style={{
@@ -35,7 +37,7 @@ export default function Cards({item, disabled, product}) {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Image
+        <FastImage
           source={{
             uri: item?.images[0],
           }}

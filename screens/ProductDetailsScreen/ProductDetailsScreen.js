@@ -14,22 +14,30 @@ import {useState} from 'react';
 import Fonts from '../../constants/Fonts';
 import Header from '../../components/Header';
 import Colors from '../../constants/Colors';
-import {SVGDownArrowBlack, SVGUp_Arrow} from '../../constants/images';
+import {
+  heart1,
+  heart2,
+  heart3,
+  SVGDownArrowBlack,
+  SVGUp_Arrow,
+} from '../../constants/images';
 import {SvgXml} from 'react-native-svg';
 import RenderHtml from 'react-native-render-html';
 import Cards from '../../components/Cards';
 import {useDispatch, useSelector} from 'react-redux';
-import {setCartItem} from '../../Redux/productSlice';
+import {setBuyNow, setCartItem, setWishList} from '../../Redux/productSlice';
 import Carts from '../../components/Carts';
-import {setCart} from '../../services/auth';
+import {setCart, setWishLists} from '../../services/auth';
 import {useNavigation} from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
+import {useEffect} from 'react';
+
 export default function ProductDetailsScreen(props) {
   const {item, product} = props.route.params;
-  console.log('productID2', product);
   // const [product, setproduct] = useState({});
   const [showProductData, setshowProductData] = useState(true);
-  // const [cartsItem, setcartsItem] = useState([])
-  const {cartItem, allBusiness} = useSelector(state => state.product);
+  const [showIshList, setshowIshList] = useState(false);
+  const {cartItem, allBusiness, wishList} = useSelector(state => state.product);
   const dispatch = useDispatch();
   const descHtml = {
     html: item?.description,
@@ -38,33 +46,68 @@ export default function ProductDetailsScreen(props) {
   const {width} = useWindowDimensions();
 
   const addToCart = async () => {
-    console.log('first');
     let cartArray = [];
     cartArray.push(item);
     dispatch(setCartItem([...cartArray, ...cartItem]));
     await setCart([...cartArray, ...cartItem]);
   };
+
+  const addTobuyNow = async () => {
+    dispatch(setBuyNow());
+    let buyNowArray = [];
+    buyNowArray.push(item);
+    dispatch(setBuyNow([...buyNowArray]));
+    navigation.navigate('CheckOutScreen');
+  };
+
+  const handleWishList = async () => {
+    let arr = [];
+    let arr2 = [];
+    let arr3 = wishList;
+    if (arr3.includes(item?._id)) {
+      console.log('wishList.indexOf(item?._id)', wishList);
+      arr2 = Array.from(arr3).splice(wishList.indexOf(item?._id), 1);
+      console.log(Array.from(new Set(arr3)));
+      dispatch(setWishList([arr2]));
+      await setWishLists([arr2]);
+    } else {
+      arr.push(item?._id);
+      dispatch(setWishList([...wishList, ...arr]));
+      await setWishLists([...wishList, ...arr]);
+      console.log('wishhhhhhh', wishList);
+    }
+  };
   const renderImages = () => {
     return (
-      <ScrollView
-        nestedScrollEnabled={true}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        contentContainerStyle={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
-        {item.images.map((i, k) => (
-          <Image
-            key={k}
-            source={{uri: i}}
-            style={{width: 370, height: 400, marginHorizontal: 10}}
-            resizeMode="stretch"
-            //   resizeMethod="resize"
+      <>
+        <TouchableOpacity
+          onPress={() => handleWishList()}
+          style={{position: 'absolute', zIndex: 9999, top: 0, right: 10}}>
+          <FastImage
+            source={wishList.includes(item?._id) ? heart3 : heart1}
+            style={{width: 35, height: 35}}
           />
-        ))}
-      </ScrollView>
+        </TouchableOpacity>
+        <ScrollView
+          nestedScrollEnabled={true}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          contentContainerStyle={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 10,
+          }}>
+          {item.images.map((i, k) => (
+            <FastImage
+              key={k}
+              source={{uri: i}}
+              style={{width: 370, height: 400, marginHorizontal: 10}}
+              //   resizeMethod="resize"
+              resizeMode={FastImage.resizeMode.stretch}
+            />
+          ))}
+        </ScrollView>
+      </>
     );
   };
 
@@ -121,6 +164,7 @@ export default function ProductDetailsScreen(props) {
           </View>
         </View>
         <TouchableOpacity
+          onPress={() => addTobuyNow()}
           style={{
             borderRadius: 8,
             backgroundColor: '#8f0070',
@@ -177,7 +221,7 @@ export default function ProductDetailsScreen(props) {
       );
     }
   };
-  console.log('allBusiness.length', allBusiness.length);
+
   const handleBusiness = () => {
     // const business = [];
     // console.log('item.business.category', item.business.category);
@@ -254,7 +298,15 @@ export default function ProductDetailsScreen(props) {
               }}>
               Delivering to you in 15 mins
             </Text>
-            <TouchableOpacity onPress={() => handleBusiness()}>
+            <TouchableOpacity
+              onPress={() => handleBusiness()}
+              style={{
+                padding: 5,
+                borderWidth: 1,
+                borderColor: 'green',
+                borderRadius: 8,
+                width: '40%',
+              }}>
               <Text
                 numberOfLines={1}
                 style={{
@@ -262,6 +314,7 @@ export default function ProductDetailsScreen(props) {
                   fontSize: 14,
                   textAlign: 'center',
                   color: 'green',
+                  lineHeight: 20,
                 }}>
                 Go to {item?.business?.name}
               </Text>
