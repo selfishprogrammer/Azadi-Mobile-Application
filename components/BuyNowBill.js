@@ -6,16 +6,16 @@ import Fonts from '../constants/Fonts';
 import Line from './Line';
 import {useSelector} from 'react-redux';
 
-export default function Bill() {
-  const {cartItem} = useSelector(state => state.product);
-  const offerPrice = cartItem?.reduce(
+export default function BuyNowBill() {
+  const {buyNow} = useSelector(state => state.product);
+  const offerPrice = buyNow?.reduce(
     (sum, product) =>
       sum +
       Math.round(product?.price - (product?.price * product?.discount) / 100),
     0,
   );
 
-  const actualPrice = cartItem?.reduce(
+  const actualPrice = buyNow?.reduce(
     (sum, product) => sum + Math.round(product?.price),
     0,
   );

@@ -16,8 +16,6 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 export default function Header() {
   const navigation = useNavigation();
-  console.log('navigation', navigation.getState());
-  console.log('navigation2', navigation.getParent());
   const {cartItem} = useSelector(state => state.product);
   const {address} = useSelector(state => state.address);
 
@@ -59,7 +57,7 @@ export default function Header() {
       </View>
       <View>
         <TouchableOpacity
-            onPress={() => navigation.navigate('CartDetailsScreen')}
+          onPress={() => navigation.navigate('CartDetailsScreen')}
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',

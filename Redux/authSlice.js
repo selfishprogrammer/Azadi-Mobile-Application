@@ -5,6 +5,8 @@ const authSlice = createSlice({
   initialState: {
     isLogin: false,
     userData: {},
+    deviceID: '',
+    appVersion: '',
   },
   reducers: {
     setLogin: (state, action) => {
@@ -13,7 +15,14 @@ const authSlice = createSlice({
     setUserData: (state, action) => {
       state.userData = action.payload;
     },
+    setDeviceID: (state, action) => {
+      state.deviceID = action.payload;
+    },
+    setAppVersion: (state, action) => {
+      state.appVersion = action.payload;
+    },
   },
 });
-export const {setLogin, setUserData} = authSlice.actions;
+export const {setLogin, setUserData, setDeviceID, setAppVersion} =
+  authSlice.actions;
 export default authSlice.reducer;

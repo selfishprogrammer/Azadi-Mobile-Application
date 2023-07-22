@@ -24,7 +24,7 @@ export default class Service {
 
   static getOTP = data => {
     console.log('data', data);
-    return postReq('GETOTP', data);
+    return postReq('GETOTP/REGISTER', data);
   };
 
   static verifyOTP = data => {
@@ -34,4 +34,18 @@ export default class Service {
   static submitContactUs = data => {
     return postReq('CONTACTUS', data);
   };
+
+  static getAllBusiness = () => getReq2('GETBUSINESSES');
+
+  static getTCVersion = deviceID => getReq2(`GETTCVERSION/${deviceID}`);
+
+  static acceptTC = data => {
+    return postReq('TCACCEPTED', data);
+  };
+
+  static getFoceUpdate = appVersion => getReq2(`FORCEUPDATE/${appVersion}`);
+  static getMaintenace = () => getReq2('GETMAINTENENCE');
+  static generateOTPForgotPassword = data =>
+    postReq('GETOTP/FORGETPASSWORD', data);
+  static paswordUpdate = data => postReq('UPDATEPASSWORD/FORGET', data);
 }

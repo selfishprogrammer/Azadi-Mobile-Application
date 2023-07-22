@@ -11,6 +11,8 @@ import {setLogin, setUserData} from '../../Redux/authSlice';
 import {setLoggedIn, setUser} from '../../services/auth';
 import {setLoading} from '../../Redux/loaderSlice';
 import ErrorToast from '../../components/ErrorToast';
+import TermsAndConditions from '../../components/TermsAndConditions';
+import ErrorText from '../../components/ErrorText';
 
 export default function LoginScreen() {
   const [username, setusername] = useState('');
@@ -19,6 +21,8 @@ export default function LoginScreen() {
   const [passwordHasError, setpasswordHasError] = useState('');
   const [backendResponce, setbackendResponce] = useState('');
   const {isLoading} = useSelector(state => state.loading);
+  const [tcVal, settcVal] = useState(false);
+  const [tcValError, settcValError] = useState('');
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -43,6 +47,9 @@ export default function LoginScreen() {
     }
     if (password.length <= 0) {
       setpasswordHasError('Enter a password');
+    }
+    if (!tcVal) {
+      settcValError('Please Accept Terms & Conditions');
     } else {
       dispatch(setLoading(true));
       const loginData = await Service.userLogin({
@@ -56,15 +63,16 @@ export default function LoginScreen() {
         await setLoggedIn('true');
         setbackendResponce('');
         resetInputField();
+        navigation.navigate('HomeScreen');
       } else {
         setbackendResponce('Email or password incorrect...');
       }
       dispatch(setLoading(false));
     }
   };
+
   return (
-    <View
-      style={{flex: 1, backgroundColor: '#F5F5F5', justifyContent: 'center'}}>
+    <View style={{flex: 1, backgroundColor: 'green', justifyContent: 'center'}}>
       <ErrorToast errorTxt={backendResponce} />
       <View
         style={{
@@ -74,7 +82,7 @@ export default function LoginScreen() {
           paddingBottom: 10,
           shadowColor: Colors.toolTipColor,
           shadowOffset: {width: 0, height: 1},
-          shadowOpacity: 0.5,
+
           elevation: 8,
           paddingHorizontal: 25,
           backgroundColor: '#fff',
@@ -105,7 +113,7 @@ export default function LoginScreen() {
           onHandelchage={e => setpassword(e)}
           value={password}
         />
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate('CheckEmail')}>
           <Text
             style={{
               textAlign: 'right',
@@ -117,6 +125,8 @@ export default function LoginScreen() {
             Forgot Password?
           </Text>
         </TouchableOpacity>
+        <TermsAndConditions tcAccepted={e => settcVal(e)} />
+        <ErrorText errorMsg={tcValError} />
         <TouchableOpacity
           onPress={login}
           style={{

@@ -1,17 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View, Text, Image} from 'react-native';
 import React from 'react';
+import FastImage from 'react-native-fast-image';
 
 export default function HomeSlider({url}) {
   return (
-    <Image
+    <FastImage
       source={{uri: url}}
       style={{
-        width: 373,
-        height: 150,
-        resizeMode: 'stretch',
-        marginHorizontal: 10,
+        width: 400,
+        height: 180,
+        marginHorizontal: 0,
+        // resizeMode: 'contain',
       }}
+      resizeMode={FastImage.resizeMode.stretch}
     />
   );
 }

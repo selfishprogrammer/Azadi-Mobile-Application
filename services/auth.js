@@ -28,4 +28,36 @@ const getCart = async () => {
   }
   return JSON.parse(data);
 };
-export {setUser, getUser, setLoggedIn, getLoggedIn, setCart, getCart};
+
+const setWishLists = async data => {
+  await AsyncStorage.setItem('wishlist', JSON.stringify(data));
+};
+const getWishList = async () => {
+  const data = await AsyncStorage.getItem('wishlist');
+  if (!data) {
+    return [];
+  }
+  return JSON.parse(data);
+};
+const setTCVersion = async data => {
+  await AsyncStorage.setItem('tc', JSON.stringify(data));
+};
+const getTCVersion = async () => {
+  const data = await AsyncStorage.getItem('tc');
+  if (!data) {
+    return null;
+  }
+  return data;
+};
+export {
+  setUser,
+  getUser,
+  setLoggedIn,
+  getLoggedIn,
+  setCart,
+  getCart,
+  setTCVersion,
+  getTCVersion,
+  setWishLists,
+  getWishList,
+};

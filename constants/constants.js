@@ -95,4 +95,57 @@ const SERVICES_LIST = [
   },
 ];
 
-export {FILTER_LIST, HOME_CARAOUSEL, SERVICES_LIST};
+const SEARCH_LISTS_BUSINESS = [
+  {
+    name: 'First Hand Business',
+    backgroundColor: 'transparent',
+    color: 'black',
+    borderWidth: 1,
+    type: 'firstHand',
+  },
+  {
+    name: 'Second Hand Business',
+    backgroundColor: 'transparent',
+    color: 'black',
+    borderWidth: 1,
+    type: 'secondHand',
+  },
+  {
+    name: 'Services',
+    backgroundColor: 'transparent',
+    color: 'black',
+    borderWidth: 1,
+    type: 'service',
+  },
+];
+const SEARCH_LISTS_PRODUCT = [
+  {
+    name: 'First Hand Product',
+    backgroundColor: 'transparent',
+    color: 'black',
+    borderWidth: 1,
+    type: 'firstHand',
+  },
+  {
+    name: 'Second Hand Product',
+    backgroundColor: 'transparent',
+    color: 'black',
+    borderWidth: 1,
+    type: 'secondHand',
+  },
+  {
+    name: 'Services',
+    backgroundColor: 'transparent',
+    color: 'black',
+    borderWidth: 1,
+    type: 'service',
+  },
+];
+
+export {
+  FILTER_LIST,
+  HOME_CARAOUSEL,
+  SERVICES_LIST,
+  SEARCH_LISTS_PRODUCT,
+  SEARCH_LISTS_BUSINESS,
+};

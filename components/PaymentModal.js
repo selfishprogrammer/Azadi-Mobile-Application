@@ -4,9 +4,11 @@ import React from 'react';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
 import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
 export default function PaymentModal({toPay}) {
   const {address} = useSelector(state => state.address);
+  const navigation = useNavigation();
 
   return (
     <View
@@ -20,7 +22,6 @@ export default function PaymentModal({toPay}) {
         borderTopRightRadius: 10,
         shadowColor: Colors.modalShadowColor,
         shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.5,
       }}>
       <View
         style={{
@@ -93,6 +94,7 @@ export default function PaymentModal({toPay}) {
             marginBottom: 25,
           }}>
           <TouchableOpacity
+            onPress={() => navigation.navigate('PaymentGateWay')}
             style={{
               padding: 10,
               backgroundColor: 'red',

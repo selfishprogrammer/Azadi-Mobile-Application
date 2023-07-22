@@ -1,73 +1,263 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import {View, Text, ScrollView} from 'react-native';
+import {View, ScrollView, FlatList, Text, RefreshControl} from 'react-native';
 import React from 'react';
 import Header from '../../components/Header';
-import {useSelector} from 'react-redux';
-import Cards from '../../components/Cards';
+import {useDispatch, useSelector} from 'react-redux';
 import NoProductFound from '../../components/NoProductFound';
 import ShopsCard from '../../components/ShopsCard';
+import Service from '../../services/services';
+import {setallBusiness} from '../../Redux/productSlice';
+import {useEffect} from 'react';
 import Fonts from '../../constants/Fonts';
+import {FILTER_LIST, SERVICES_LIST} from '../../constants/constants';
+import Filter from '../../components/Filter';
+import {useState} from 'react';
+import SearchBar from '../../components/SearchBar';
 
 export default function ShopsScreen() {
-  const {allBusiness} = useSelector(state => state.product);
-  // console.log('allBusiness', Array.from(new Set(allBusiness)));
-  //   let arr = [allBusiness[0]];
-  //   allBusiness.forEach(element => {
-  //     console.log(arr.includes(element?._id));
-  //     arr.forEach(element2 => {
-  //       if (element2?._id !== element?._id) {
-  //         arr.push(element);
-  //       }
-  //     });
-  //   });
-  //   console.log('allBusiness2', [...new Set(arr)]);
+  const dispatch = useDispatch();
+  const [allBusinessState, setallBusinessState] = useState([]);
+  const [secondHandBussiness, setsecondHandBussiness] = useState([]);
+  const [refreshing, setrefreshing] = useState(false);
+  const {buyNow, allBusiness} = useSelector(state => state.product);
+
+  useEffect(() => {
+    getShopsRecord();
+  }, []);
+  const handleServices = () => {};
+
+  const getShopsRecord = async () => {
+    const shops = await Service.getAllBusiness();
+    console.log('shops===>>>', shops);
+    if (shops && shops?.success) {
+      let showBussiness = shops?.resultObj.filter(i => {
+        console.log('bussinessYpppp', i.businessType);
+        return i.isActive && i.isVerified;
+      });
+      console.log('show==>', showBussiness.length);
+      dispatch(setallBusiness([...showBussiness]));
+      setallBusinessState(showBussiness);
+      let secondHandBusiness = showBussiness.filter(i => {
+        console.log('bussinessYpppp', i.businessType);
+        return i.businessType === 'secondHand';
+      });
+      setsecondHandBussiness(secondHandBusiness);
+    } else {
+    }
+  };
+  const handleFilter = (filterValue, type) => {
+    setallBusinessState([]);
+    console.log('flterValue', filterValue);
+    if (type === 'firstHand') {
+      if (filterValue !== '') {
+        console.log(
+          allBusinessState,
+          'allBusinessStateallBusinessStateallBusinessState',
+        );
+        const newBusiness = allBusiness.filter(item => {
+          return item.category === filterValue;
+        });
+        setallBusinessState(newBusiness);
+      } else {
+        setallBusinessState(allBusinessState);
+      }
+    } else if (type === 'secondHand') {
+      if (filterValue !== '') {
+        const newBusiness = secondHandBussiness.filter(item => {
+          return (
+            item.category === filterValue && item?.businessType === 'secondHand'
+          );
+        });
+        setsecondHandBussiness(newBusiness);
+      } else {
+        setsecondHandBussiness(secondHandBussiness);
+      }
+    }
+  };
   const renderShops = () => {
-    if (allBusiness.length > 0) {
+    if (allBusinessState.length > 0) {
       return (
-        <ScrollView
-          nestedScrollEnabled={true}
+        <FlatList
+          keyExtractor={(i, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 10,
-            paddingBottom: 5,
-          }}>
-          {allBusiness.map((item, key) => (
+          horizontal
+          data={allBusinessState}
+          renderItem={({item}) => (
             <ShopsCard
+              product={allBusinessState}
               item={item}
-              key={key}
-              product={allBusiness}
               disabled={item.inStock}
             />
-          ))}
-        </ScrollView>
+          )}
+        />
       );
     } else {
       return <NoProductFound />;
     }
+  };
+  const renderSecondHandShops = () => {
+    if (secondHandBussiness.length > 0) {
+      return (
+        <FlatList
+          keyExtractor={(i, index) => index.toString()}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={secondHandBussiness}
+          renderItem={({item}) => (
+            <ShopsCard
+              product={secondHandBussiness}
+              item={item}
+              disabled={item.inStock}
+            />
+          )}
+        />
+      );
+    } else {
+      return <NoProductFound />;
+    }
+  };
+  const onRefresh = () => {
+    setrefreshing(true);
+    getShopsRecord();
+    setrefreshing(false);
   };
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: '#fff',
-        justifyContent: 'center',
-        alignItems: 'center',
       }}>
       <Header />
+      <SearchBar screen="Shop" />
       <ScrollView
         contentContainerStyle={{
-          flex: 1,
-          backgroundColor: '#fff',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text style={{color: 'black', fontFamily: Fonts.bold, fontSize: 20}}>
-          We are Coming Soon!
+          marginHorizontal: 10,
+          marginVertical: 5,
+        }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => onRefresh()}
+          />
+        }>
+        <Text
+          style={{
+            fontFamily: Fonts.bold,
+            color: 'black',
+            fontSize: 12,
+            textAlign: 'left',
+            marginHorizontal: 13,
+            marginTop: 10,
+          }}>
+          Shops/Business by categories
         </Text>
+        <FlatList
+          keyExtractor={(i, index) => index.toString()}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={FILTER_LIST}
+          renderItem={({item}) => (
+            <Filter
+              title={item.title}
+              category={item.category}
+              images={item.images}
+              onClickFilter={filterVal => handleFilter(filterVal, 'firstHand')}
+            />
+          )}
+        />
+        {renderShops()}
+        <Text
+          style={{
+            fontFamily: Fonts.bold,
+            color: 'black',
+            fontSize: 15,
+            textAlign: 'left',
+            marginHorizontal: 13,
+            marginTop: 10,
+          }}>
+          Services
+        </Text>
+
+        <FlatList
+          keyExtractor={(i, index) => index.toString()}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={SERVICES_LIST}
+          renderItem={({item}) => (
+            <Filter
+              keyExtractor={(item, index) => index.toString()}
+              title={item.title}
+              category={item.category}
+              images={item.images}
+              onClickFilter={filterVal => handleServices(filterVal)}
+            />
+          )}
+        />
+
+        <Text
+          style={{
+            fontFamily: Fonts.bold,
+            color: 'black',
+            fontSize: 12,
+            textAlign: 'left',
+            marginHorizontal: 13,
+            marginTop: 10,
+          }}>
+          Second hand Shops/Business
+        </Text>
+        <FlatList
+          keyExtractor={(i, index) => index.toString()}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={FILTER_LIST}
+          renderItem={({item}) => (
+            <Filter
+              title={item.title}
+              category={item.category}
+              images={item.images}
+              onClickFilter={filterVal => handleFilter(filterVal, 'secondHand')}
+            />
+          )}
+        />
+        {renderSecondHandShops()}
+        {/* <Text
+          style={{
+            fontFamily: Fonts.bold,
+            color: 'black',
+            fontSize: 12,
+            textAlign: 'left',
+            marginHorizontal: 13,
+            marginTop: 10,
+          }}>
+          Shops/Business by your currnt location
+        </Text> */}
         {/* {renderShops()} */}
+        {/* {renderShops()} */}
+        {/* <Text
+          style={{
+            fontFamily: Fonts.bold,
+            color: 'black',
+            fontSize: 12,
+            textAlign: 'left',
+            marginHorizontal: 13,
+            marginTop: 10,
+          }}>
+          Product releated to shops
+        </Text>
+        <FlatList
+          keyExtractor={(i, index) => index.toString()}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={allProductList}
+          renderItem={({item}) => (
+            <Cards
+              product={allProductList}
+              item={item}
+              disabled={item.inStock}
+            />
+          )}
+        /> */}
       </ScrollView>
     </View>
   );

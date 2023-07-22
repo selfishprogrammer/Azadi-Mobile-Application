@@ -8,6 +8,7 @@ import Fonts from '../constants/Fonts';
 const SearchBar = ({screen, onChangeCallback}) => {
   const [searchQuery, setSearchQuery] = React.useState('');
   const navigation = useNavigation();
+  console.log('screennnn', screen);
   return (
     <View
       style={{
@@ -17,16 +18,20 @@ const SearchBar = ({screen, onChangeCallback}) => {
         justifyContent: 'space-between',
         alignItems: 'center',
       }}>
-      <View style={{width: '90%'}}>
+      <View style={{width: '90%', elevation: 8}}>
         <TextInput
           onPressIn={() =>
-            screen === 'Home' ? navigation.navigate('SearchProductScreen') : ''
+            screen === 'Home' || screen === 'Shop'
+              ? navigation.navigate('SearchProductScreen', {
+                  screen: screen,
+                })
+              : ''
           }
           placeholder="Search products and services"
           style={{
             borderWidth: 2,
             borderColor: 'white',
-            height: 40,
+            height: 45,
             backgroundColor: '#fff',
             color: 'black',
             fontFamily: Fonts.bold,
@@ -36,8 +41,9 @@ const SearchBar = ({screen, onChangeCallback}) => {
           }}
           value={searchQuery}
           onChangeText={e => {
+            console.log('screennn', screen);
             setSearchQuery(e);
-            onChangeCallback(e);
+            onChangeCallback(e, screen);
           }}
         />
         <View

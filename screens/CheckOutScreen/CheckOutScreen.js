@@ -1,29 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View, Text, ScrollView, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
 import React from 'react';
-import Header from '../../components/Header';
-import Fonts from '../../constants/Fonts';
-import Colors from '../../constants/Colors';
 import {useSelector} from 'react-redux';
 import Counter from '../../components/Counter';
+import Colors from '../../constants/Colors';
+import Fonts from '../../constants/Fonts';
+import BuyNowCounter from '../../components/BuyNowCounter';
+import Header from '../../components/Header';
 import DeliveryPartnerTip from '../../components/DeliveryPartnerTip';
-import Bill from '../../components/Bill';
-import {useState} from 'react';
-import {useEffect} from 'react';
+import BuyNowBill from '../../components/BuyNowBill';
 import PaymentModal from '../../components/PaymentModal';
-import NoCart from '../../components/NoCart';
-
-export default function CartDetailsScreen() {
-  const {cartItem} = useSelector(state => state.product);
-  const [uniqueArrayCart, setuniqueArrayCart] = useState([]);
-
-  useEffect(() => {
-    let uniqueCart = [...new Set(cartItem)];
-    setuniqueArrayCart(uniqueCart);
-  }, [cartItem]);
-
+export default function CheckOutScreen() {
+  const {buyNow, allBusiness} = useSelector(state => state.product);
+  //   console.log('fiallBusinessallBusinessallBusinessrst', allBusiness);
   const renderPrice = item => {
-    const priceArray = cartItem.filter(i => {
+    const priceArray = buyNow.filter(i => {
       return i === item;
     });
     const offerPrice = priceArray?.reduce(
@@ -38,15 +29,14 @@ export default function CartDetailsScreen() {
     );
     return {offerPrice: offerPrice, actualPrice: actualPrice};
   };
-
-  const offerPriceFromCart = cartItem?.reduce(
+  const offerPriceFromCart = buyNow?.reduce(
     (sum, product) =>
       sum +
       Math.round(product?.price - (product?.price * product?.discount) / 100),
     0,
   );
 
-  const offerDiscountPrice = cartItem?.reduce(
+  const offerDiscountPrice = buyNow?.reduce(
     (sum, product) => sum + Math.round(product?.price),
     0,
   );
@@ -55,28 +45,11 @@ export default function CartDetailsScreen() {
 
   const toPay = offerPriceFromCart + 50;
 
-  if (cartItem.length === 0) {
-    return <NoCart />;
-  }
-
-  const renderCartBox = () => {
-    // let cartNew = [];
-    // cartItem.forEach(element => {
-    //   // if (!cartNew.includes(element)) {
-    //   //   console.log('!cartNew.includes(element)', cartNew.includes(element));
-    //   //   cartNew.push(element);
-    //   // }
-    //   console.log('element?._id', element?._id);
-    //   if (cartNew.length === 0) {
-    //     cartNew.push(element);
-    //   }
-    //   cartNew.forEach(item => {
-    //     if (element?._id !== item?._id) {
-    //       cartNew.push(element);
-    //     }
-    //   });
-    // });
-    return [...new Set(cartItem)].map((item, key) => (
+  //   const businessName = allBusiness.filter(i => {
+  //     return i?._id === buyNow[0]?.business?._id;
+  //   });
+  const renderCheckOut = () => {
+    return [...new Set(buyNow)].map((item, key) => (
       <View
         key={key}
         style={{
@@ -122,7 +95,7 @@ export default function CartDetailsScreen() {
               alignItems: 'center',
               width: '40%',
             }}>
-            {<Counter product={item} index={key} />}
+            {<BuyNowCounter product={item} index={key} />}
             <View>
               <Text style={{fontFamily: Fonts.bold, fontSize: 12}}>
                 ₹{renderPrice(item).offerPrice}
@@ -146,48 +119,57 @@ export default function CartDetailsScreen() {
   return (
     <View style={{flex: 1, backgroundColor: '#fff'}}>
       <Header />
-      <ScrollView contentContainerStyle={{}}>
-        <View style={{padding: 5, backgroundColor: 'yellow'}}>
+      <View style={{padding: 5, backgroundColor: 'yellow'}}>
+        <Text
+          style={{
+            fontFamily: Fonts.regular,
+            textAlign: 'center',
+            fontSize: 12,
+          }}>
+          Yay! You've unlocked
+          <Text style={{fontFamily: Fonts.bold, fontSize: 14}}>
+            Free Delivery
+          </Text>
+        </Text>
+      </View>
+      <View style={{padding: 5, backgroundColor: '#F2F1E6'}}>
+        <Text
+          style={{
+            fontFamily: Fonts.regular,
+            textAlign: 'center',
+            fontSize: 12,
+          }}>
+          You saved
+          <Text
+            style={{
+              fontFamily: Fonts.bold,
+              fontSize: 14,
+              paddingHorizontal: 3,
+            }}>
+            ₹{rsSaved}
+          </Text>
           <Text
             style={{
               fontFamily: Fonts.regular,
               textAlign: 'center',
               fontSize: 12,
             }}>
-            Yay! You've unlocked
-            <Text style={{fontFamily: Fonts.bold, fontSize: 14}}>
-              Free Delivery
-            </Text>
+            in this order
           </Text>
-        </View>
-        <View style={{padding: 5, backgroundColor: '#F2F1E6'}}>
-          <Text
-            style={{
-              fontFamily: Fonts.regular,
-              textAlign: 'center',
-              fontSize: 12,
-            }}>
-            You saved
-            <Text
-              style={{
-                fontFamily: Fonts.bold,
-                fontSize: 14,
-                paddingHorizontal: 3,
-              }}>
-              ₹{rsSaved}
-            </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.regular,
-                textAlign: 'center',
-                fontSize: 12,
-              }}>
-              in this order
-            </Text>
-          </Text>
-        </View>
-        {renderCartBox()}
-
+        </Text>
+      </View>
+      <ScrollView>
+        <Text
+          style={{
+            marginHorizontal: 15,
+            marginTop: 10,
+            marginBottom: 4,
+            fontFamily: Fonts.bold,
+            fontSize: 20,
+          }}>
+          {buyNow[0]?.business?.name}
+        </Text>
+        {renderCheckOut()}
         <TouchableOpacity
           style={{
             flexDirection: 'row',
@@ -235,7 +217,7 @@ export default function CartDetailsScreen() {
         </TouchableOpacity>
         <DeliveryPartnerTip />
         <View style={{marginBottom: 200}}>
-          <Bill toPay={toPay} />
+          <BuyNowBill toPay={toPay} />
         </View>
       </ScrollView>
       <PaymentModal toPay={toPay} />
